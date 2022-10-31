@@ -50,27 +50,36 @@ vec-add [] ls₂ = ls₂
 vec-add ls₁ [] = ls₁
 vec-add (x₁ ∷ ls₁) (x₂ ∷ ls₂) = (x₁ + x₂) ∷ vec-add ls₁ ls₂
 
+data Vec : (a : Set) (n : Nat) → Set where
+  [] : ∀ {a} → Vec a 0
+  _::_ : ∀ {a n} → a → Vec a n → Vec a (1 + n)
 
-data Vec : (n : Nat) → Set where
-  [] : Vec 0
-  _::_ : ∀ {n} → Nat → Vec n → Vec (1 + n)
 
 infixr 10 _::_
 
 vec1 = 1 :: 2 :: 3 :: 4 :: []
 vec2 = 5 :: 6 :: 7 :: 8 :: []
 
-vec-add2 : ∀ {n} → Vec n → Vec n → Vec n
+vec-add2 : ∀ {n} → Vec Nat n → Vec Nat n → Vec Nat n
 vec-add2 [] [] = []
 vec-add2 (x₁ :: v₁) (x₂ :: v₂) = (x₁ + x₂) :: vec-add2 v₁ v₂
 
-vec-dot : ∀ {n} → Vec n → Vec n → Nat
+_+++_ = vec-add2
+infixr 8 _+++_
+
+vec-dot : ∀ {n} → Vec Nat n → Vec Nat n → Nat
 vec-dot [] [] = 0
 vec-dot (x₁ :: v₁) (x₂ :: v₂) = x₁ * x₂ + vec-dot v₁ v₂
 
-vec-con : ∀ {m n} → Vec m → Vec n → Vec (m + n)
+_∙_ = vec-dot
+infixr 9 _∙_
+
+vec-con : ∀ {m n} → Vec Nat m → Vec Nat n → Vec Nat (m + n)
 vec-con [] v₂ = v₂
 vec-con (x :: v₁) v₂ = x :: vec-con v₁ v₂
+
+_++++_ = vec-con
+infixr 10 _++++_
 
 -- assignments:
 -- 1. use infix operators for vec-add, vec-dot and vec-con
